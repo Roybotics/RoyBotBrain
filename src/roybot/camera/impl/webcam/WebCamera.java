@@ -1,6 +1,9 @@
 package roybot.camera.impl.webcam;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -116,12 +119,19 @@ public class WebCamera extends CameraBase implements CameraInterface
 	public void debugDisplay()
 	{
 		mJframe = new JFrame();
+		Container lPane = mJframe.getContentPane();
+		lPane.setLayout(new BorderLayout());
+
 		mLabel = new JLabel();
-		mJframe.getContentPane().add(mLabel);
+		mLabel.setPreferredSize(new Dimension(2*mWidth, 2*mHeight));
+		lPane.add(mLabel, BorderLayout.CENTER);
 		mJframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mJframe.setTitle("RaspiCam");
+		mJframe.setSize(2*mWidth, 2*mHeight);
+		
+		mJframe.pack();
+		
 		mJframe.setVisible(true);
-		mJframe.setSize(mWidth, mHeight);
 
 		addListener((	pCameraInterface,
 									pWebcameEvent,
@@ -131,13 +141,12 @@ public class WebCamera extends CameraBase implements CameraInterface
 									pHeight,
 									pBuffer) -> {
 
-			ImageProcessing.highlightColor(pWidth, pHeight, pBuffer);
 			pCameraInterface.getDisplayGraphics()
 											.drawImage(	((WebcamEvent) pWebcameEvent).getImage(),
 																	0,
 																	0,
-																	mWidth,
-																	mHeight,
+																	2*mWidth,
+																	2*mHeight,
 																	null);
 		});
 	}
